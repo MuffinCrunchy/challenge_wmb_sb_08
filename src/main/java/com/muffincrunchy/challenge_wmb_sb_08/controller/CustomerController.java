@@ -16,7 +16,7 @@ import static com.muffincrunchy.challenge_wmb_sb_08.model.constant.ApiUrl.*;
 @RequestMapping(CUSTOMER_API_URL)
 public class CustomerController {
 
-    public final CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping
     public List<Customer> getCustomers() {
