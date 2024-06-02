@@ -1,11 +1,15 @@
 package com.muffincrunchy.challenge_wmb_sb_08.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @jakarta.persistence.Table(name = "tables")
 public class Table {

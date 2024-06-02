@@ -2,11 +2,15 @@ package com.muffincrunchy.challenge_wmb_sb_08.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "menus")
 public class Menu {

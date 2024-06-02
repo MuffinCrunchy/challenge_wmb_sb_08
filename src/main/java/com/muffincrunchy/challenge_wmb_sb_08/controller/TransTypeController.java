@@ -1,8 +1,13 @@
 package com.muffincrunchy.challenge_wmb_sb_08.controller;
 
+import com.muffincrunchy.challenge_wmb_sb_08.model.dto.request.CreateTransTypeRequest;
+import com.muffincrunchy.challenge_wmb_sb_08.model.dto.request.UpdateTransTypeRequest;
+import com.muffincrunchy.challenge_wmb_sb_08.model.dto.response.CommonResponse;
 import com.muffincrunchy.challenge_wmb_sb_08.model.entity.TransType;
 import com.muffincrunchy.challenge_wmb_sb_08.service.TransTypeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +22,56 @@ public class TransTypeController {
     private final TransTypeService transTypeService;
 
     @GetMapping
-    public List<TransType> getTransTypes() {
-        return transTypeService.getAll();
+    public ResponseEntity<CommonResponse<List<TransType>>> getTransTypes() {
+        List<TransType> transTypes = transTypeService.getAll();
+        CommonResponse<List<TransType>> response = CommonResponse.<List<TransType>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("get all data success")
+                .data(transTypes)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(ID_PATH_URL)
-    public TransType getTransType(@PathVariable String id) {
-        return transTypeService.getById(id);
+    public ResponseEntity<CommonResponse<TransType>> getTransType(@PathVariable String id) {
+        TransType transType = transTypeService.getById(id);
+        CommonResponse<TransType> response = CommonResponse.<TransType>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("get all data success")
+                .data(transType)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public TransType insertTransType(@RequestBody TransType transType) {
-        return transTypeService.insert(transType);
+    public ResponseEntity<CommonResponse<TransType>> createTransType(@RequestBody CreateTransTypeRequest transType) {
+        TransType newTransType = transTypeService.create(transType);
+        CommonResponse<TransType> response = CommonResponse.<TransType>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("save data success")
+                .data(newTransType)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
-    public TransType updateTransType(@RequestBody TransType transType) {
-        return transTypeService.update(transType);
+    public ResponseEntity<CommonResponse<TransType>> updateTransType(@RequestBody UpdateTransTypeRequest transType) {
+        TransType updateTransType = transTypeService.update(transType);
+        CommonResponse<TransType> response = CommonResponse.<TransType>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("update data success")
+                .data(updateTransType)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(ID_PATH_URL)
-    public String deleteTransType(@PathVariable("id") String id) {
+    public ResponseEntity<CommonResponse<String>> deleteTransType(@PathVariable("id") String id) {
         transTypeService.delete(id);
-        return String.format("{ Status: Delete Id %s Success }", id);
+        CommonResponse<String> response = CommonResponse.<String>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("delete data success")
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

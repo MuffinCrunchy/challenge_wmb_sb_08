@@ -1,12 +1,15 @@
-package com.muffincrunchy.challenge_wmb_sb_08.service;
+package com.muffincrunchy.challenge_wmb_sb_08.service.implementation;
 
 import com.muffincrunchy.challenge_wmb_sb_08.model.dto.request.BillRequest;
+import com.muffincrunchy.challenge_wmb_sb_08.model.dto.request.PagingRequest;
 import com.muffincrunchy.challenge_wmb_sb_08.model.dto.response.BillDetailResponse;
 import com.muffincrunchy.challenge_wmb_sb_08.model.dto.response.BillResponse;
 import com.muffincrunchy.challenge_wmb_sb_08.model.entity.*;
 import com.muffincrunchy.challenge_wmb_sb_08.repository.BillRepository;
+import com.muffincrunchy.challenge_wmb_sb_08.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,9 +29,19 @@ public class BillServiceImplementation implements BillService {
     private final BillDetailService billDetailService;
 
     @Override
-    public List<BillResponse> getAll() {
+    public Page<BillResponse> getAll(PagingRequest pagingRequest) {
+        if (pagingRequest.getPage() <=0) {
+            pagingRequest.setPage(1);
+        }
+        String sortBy = "transType";
+        if (pagingRequest.getSortBy().equalsIgnoreCase("customerId") || pagingRequest.getSortBy().equalsIgnoreCase("tableId")) {
+            sortBy = pagingRequest.getSortBy();
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingRequest.getDirection()), sortBy);
+        Pageable pageable = PageRequest.of((pagingRequest.getPage() - 1), pagingRequest.getSize(), sort);
         List<Bill> bills = billRepository.findAll();
-        return bills.stream().map(bill -> {
+        List<BillResponse> billResponses = bills.stream().map(bill -> {
             List<BillDetailResponse> billDetailResponses = bill.getBillDetails().stream()
                     .map(billDetail -> BillDetailResponse.builder()
                             .id(billDetail.getId())
@@ -45,6 +58,10 @@ public class BillServiceImplementation implements BillService {
                     .billDetails(billDetailResponses)
                     .build();
         }).toList();
+
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min(start + pageable.getPageSize(), billResponses.size());
+        return new PageImpl<>(billResponses.subList(start, end), pageable, billResponses.size());
     }
 
     @Override
@@ -68,7 +85,7 @@ public class BillServiceImplementation implements BillService {
     }
 
     @Override
-    public BillResponse insert(BillRequest request) {
+    public BillResponse create(BillRequest request) {
         Customer customer = customerService.getById(request.getCustomerId());
         Table table = tableService.getById(request.getTableId());
         TransType transType = transTypeService.getById(request.getTransType());

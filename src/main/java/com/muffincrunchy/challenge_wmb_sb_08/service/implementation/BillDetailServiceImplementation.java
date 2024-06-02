@@ -1,7 +1,8 @@
-package com.muffincrunchy.challenge_wmb_sb_08.service;
+package com.muffincrunchy.challenge_wmb_sb_08.service.implementation;
 
 import com.muffincrunchy.challenge_wmb_sb_08.model.entity.BillDetail;
 import com.muffincrunchy.challenge_wmb_sb_08.repository.BillDetailRepository;
+import com.muffincrunchy.challenge_wmb_sb_08.service.BillDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
