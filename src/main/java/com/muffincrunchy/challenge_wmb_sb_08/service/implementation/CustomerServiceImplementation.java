@@ -65,14 +65,8 @@ public class CustomerServiceImplementation implements CustomerService {
     }
 
     @Override
-    public Customer create(CreateCustomerRequest customer) {
-        validation.validate(customer);
-        Customer newCustomer = Customer.builder()
-                .name(customer.getName())
-                .phoneNo(customer.getPhoneNo())
-                .isMember(customer.getIsMember())
-                .build();
-        return customerRepository.saveAndFlush(newCustomer);
+    public Customer create(Customer customer) {
+        return customerRepository.saveAndFlush(customer);
     }
 
     @Override

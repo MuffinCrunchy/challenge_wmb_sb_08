@@ -113,17 +113,6 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<CommonResponse<?>> createCustomer(@RequestBody CreateCustomerRequest customer) {
-        Customer newCustomer = customerService.create(customer);
-        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
-                .statusCode(HttpStatus.CREATED.value())
-                .message("save data success")
-                .data(newCustomer)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @PutMapping
     public ResponseEntity<CommonResponse<Customer>> updateCustomer(@RequestBody UpdateCustomerRequest customer) {
         Customer updateCustomer = customerService.update(customer);
